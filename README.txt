@@ -1,3 +1,13 @@
+Porting to Ruby as personal project
+
+
+Will replace NTLK with 
+
+ruby module TREAT
+
+
+
+
 Installer: http://MrFeinberg.com/haikufinder-1.1.zip
 
 * 
