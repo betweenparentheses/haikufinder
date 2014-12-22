@@ -36,28 +36,31 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 from __future__ import with_statement
-import nltk
-import re
-import pickle
-import gzip
+import nltk # natural language, port to alternative
+import re  #regex module, not necessary for ruby
+import pickle # serializer
+import gzip # see why this is necessary
 import os.path
 import sys
 
 def file(relpath):
     return os.path.join(os.path.dirname(__file__), relpath)
+end
 
 def read_alternates(which):
-    with open(file('data/awkward_%s'%which), 'r') as baddies:
-        return '|'.join([e.strip() for e in baddies.readlines() if len(e.strip()) > 0])
-    
+    a = File.readlines("data/awkward_#{which}").map{|line| line.strip }.select{|line| line.length > 0 }
+    a.join('|')
+end
+
 single_line_filters = [
-                       re.compile(r'^[a-z][^.?!;:]+([.?!;:]+[^.?!;:]+)+$', re.IGNORECASE),
-                       re.compile(r'[.?!;:]+\s+[\'"]?[A-Za-z]+(?:\'[a-z]+)?$'),
+                       /^[a-z][^.?!;:]+([.?!;:]+[^.?!;:]+)+$/,
+                       /[.?!;:]+\s+[\'\"]?[A-Za-z]+(?:\'[a-z]+)?$/,
                        ]
+                       
 single_line_filters.append(re.compile(r'^(?:%s)\b'%read_alternates('starts')))
 single_line_filters.append(re.compile(r'\b(?:%s)$'%read_alternates('ends'), re.IGNORECASE))
    
-first_word_comma = re.compile(r'^\s*[a-z]\w*,')
+first_word_comma = /'^\s*[a-z]\w*,/
 
 with open(file('data/awkward_breaks'), 'r') as breaks:
     alts = '|'.join([r'\b%s\b' % ('\n'.join(e.strip().split())) for e in breaks.readlines() if len(e.strip()) > 0]
@@ -268,7 +271,9 @@ class HaikuFinder:
 
 def find_haikus(text,  unknown_word_handler=None):
     return HaikuFinder(text, unknown_word_handler).find_haikus()
+end
 
 def count_syllables(text):
     return LineSyllablizer(text).count_syllables()
+end
 
